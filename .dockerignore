@@ -1,0 +1,4 @@
+# The image only needs app.py; the model comes in through a volume. Whitelist so that
+# models/, .env or anything else in the folder never reaches the build context.
+*
+!app.py

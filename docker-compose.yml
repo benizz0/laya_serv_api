@@ -1,0 +1,29 @@
+services:
+  laya:
+    build:
+      context: .
+      # args:
+      #   TORCH_INDEX_URL: https://download.pytorch.org/whl/cu126   # GPU build
+    image: laya-server:latest
+    container_name: laya
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      # Checkpoint directory on the host, mounted read-only. Relative to this file.
+      - ${LAYA_MODEL_HOST_DIR:-./models/laya}:/models/laya:ro
+    # Values come from .env (read automatically by compose), else the defaults below.
+    environment:
+      # Required: app.py refuses to start when empty.
+      LAYA_API_KEY: ${LAYA_API_KEY:-}
+      LAYA_DEVICE: ${LAYA_DEVICE:-cpu}
+      LAYA_THREADS: ${LAYA_THREADS:-4}
+      LAYA_MAX_CONCURRENT: ${LAYA_MAX_CONCURRENT:-16}
+    # GPU (needs the cu126 build arg above + NVIDIA Container Toolkit / Docker Desktop WSL2):
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]

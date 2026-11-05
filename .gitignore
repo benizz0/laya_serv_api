@@ -1,0 +1,28 @@
+# Secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Models / weights (mounted as a volume, never committed)
+models/
+work/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.onnx
+*.gguf
+
+# Data
+*.mbox
+*.jsonl
+data*/
+
+# Python / editors
+__pycache__/
+*.pyc
+.venv/
+.vscode/
+.idea/
