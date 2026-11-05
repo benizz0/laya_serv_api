@@ -34,13 +34,24 @@ models/laya/
 Par défaut, compose monte `./models/laya`. Pour un autre dossier : `LAYA_MODEL_HOST_DIR` dans `.env`.
 `models/` est ignoré par git.
 
+## Image
+
+Publiée sur GitHub Container Registry par GitHub Actions (`.github/workflows/docker-publish.yml`)
+à chaque push sur `main` et à chaque tag `v*` :
+
+```bash
+docker pull ghcr.io/benizz0/laya_serv_api:latest
+```
+
+Tags : `latest` (main), `sha-<commit>`, `X.Y.Z` / `X.Y` (tags git `vX.Y.Z`). linux/amd64, CPU.
+
 ## Lancer
 
 ```powershell
 Copy-Item .env.example .env      # Linux/macOS : cp .env.example .env
 # générer une clé et la mettre dans LAYA_API_KEY :
 [Convert]::ToBase64String([Security.Cryptography.RandomNumberGenerator]::GetBytes(32))   # ou : openssl rand -base64 32
-docker compose up -d --build
+docker compose up -d             # tire l'image ghcr ; --build pour construire localement
 docker compose logs -f
 ```
 
@@ -49,10 +60,11 @@ Changer de modèle = changer `LAYA_MODEL_HOST_DIR` puis `docker compose up -d` (
 Sans compose :
 
 ```bash
-docker build -t laya-server .
 docker run -d -p 8000:8000 -e LAYA_API_KEY=<clé> \
-  -v /chemin/vers/checkpoint:/models/laya:ro laya-server
+  -v /chemin/vers/checkpoint:/models/laya:ro ghcr.io/benizz0/laya_serv_api:latest
 ```
+
+Build local : `docker build -t laya-server .`
 
 ## Authentification
 
